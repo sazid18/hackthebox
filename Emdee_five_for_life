@@ -1,0 +1,18 @@
+import requests
+import hashlib
+import re
+url = 'http://docker.hackthebox.eu:30713/'
+r=requests.session()
+out=r.get(url)
+out=re.search("<h3 align='center'>+.*?</h3>",out.text)
+out = re.search("'>.*</",out[0])
+hash_string = out[0]
+print(out[0])
+print(hash_string[2:-2])
+final_value = hashlib.md5(hash_string[2:-2].encode('utf-8')).hexdigest()
+print(final_value)
+
+data={'hash': final_value}
+out = r.post(url = url, data = data)
+
+print(out.text)
